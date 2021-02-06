@@ -29,7 +29,7 @@ public final class DatabaseWrapper {
 
     private static final SQL SQL_CONFIG = IridiumSkyblock.getInstance().getSql();
 
-    private final Dao<User, Integer> userDao;
+    private final Dao<User, UUID> userDao;
     private final Dao<Island, Integer> islandDao;
 
     public DatabaseWrapper() throws SQLException {
@@ -54,13 +54,13 @@ public final class DatabaseWrapper {
             case MYSQL:
             case MARIADB:
             case POSTGRESQL:
-                return "jdbc:" + SQL_CONFIG.driver + "://" + SQL_CONFIG.host + ":" + SQL_CONFIG.port + "/" + SQL_CONFIG.database;
+                return "jdbc:" + SQL_CONFIG.driver + "://" + SQL_CONFIG.host + ":" + SQL_CONFIG.port + "/" + SQL_CONFIG.database + "_orm";
             case SQLSERVER:
-                return "jdbc:sqlserver://" + SQL_CONFIG.host + ":" + SQL_CONFIG.port + ";databaseName=" + SQL_CONFIG.database;
+                return "jdbc:sqlserver://" + SQL_CONFIG.host + ":" + SQL_CONFIG.port + ";databaseName=" + SQL_CONFIG.database + "_orm";
             case H2:
-                return "jdbc:h2:file:" + SQL_CONFIG.database;
+                return "jdbc:h2:file:" + SQL_CONFIG.database + "_orm";
             case SQLITE:
-                return "jdbc:sqlite:" + new File(IridiumSkyblock.getInstance().getDataFolder(), SQL_CONFIG.database + ".db");
+                return "jdbc:sqlite:" + new File(IridiumSkyblock.getInstance().getDataFolder(), SQL_CONFIG.database + "_orm" + ".db");
         }
 
         throw new RuntimeException("How did we get here?");
@@ -81,7 +81,7 @@ public final class DatabaseWrapper {
     public CompletableFuture<@Nullable User> getUserByName(@NotNull String name) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                userDao.queryBuilder().where().eq("name", name).queryForFirst();
+                return userDao.queryBuilder().where().eq("name", name).queryForFirst();
             } catch (SQLException exception) {
                 exception.printStackTrace();
             }
@@ -94,18 +94,6 @@ public final class DatabaseWrapper {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 return islandDao.queryBuilder().where().eq("id", id).queryForFirst();
-            } catch (SQLException exception) {
-                exception.printStackTrace();
-            }
-
-            return null;
-        });
-    }
-
-    public CompletableFuture<@Nullable Island> getIslandByOwner(@NotNull User owner) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                return islandDao.queryBuilder().where().eq("owner_id", owner.getId()).queryForFirst();
             } catch (SQLException exception) {
                 exception.printStackTrace();
             }
