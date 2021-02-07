@@ -1,7 +1,6 @@
 package com.iridium.iridiumskyblock.database.orm;
 
 import com.cryptomorin.xseries.XBiome;
-import com.iridium.iridiumskyblock.Direction;
 import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.Role;
 import com.iridium.iridiumskyblock.configs.Schematics;
@@ -37,7 +36,7 @@ import java.time.ZonedDateTime;
 @DatabaseTable(tableName = "islands")
 public final class Island {
 
-    @DatabaseField(columnName = "id", generatedId = true)
+    @DatabaseField(columnName = "id", generatedId = true, canBeNull = false)
     @NotNull
     private Integer id;
 
@@ -81,43 +80,46 @@ public final class Island {
         return members.stream().filter(user -> user.getRole() == Role.Owner).findFirst().orElse(null);
     }
 
+
+    //Function based off: https://stackoverflow.com/a/19287714
     public Location getCenter(World world) {
-        //TODO improve and optimise this
-        int x = 0;
-        int z = 0;
+        if (id == 1) return new Location(world, 0, 0, 0);
+        // In this algorithm id  0 will be where we want id 2 to be and 1 will be where 3 is ect
+        int n = id - 2;
 
-        int length = 1;
-        int current = 0;
-        Direction direction = Direction.NORTH;
+        int r = (int) (Math.floor((Math.sqrt(n + 1) - 1) / 2) + 1);
+        // compute radius : inverse arithmetic sum of 8+16+24+...=
 
-        for (int i = 1; i < id; i++) {
+        int p = (8 * r * (r - 1)) / 2;
+        // compute total point on radius -1 : arithmetic sum of 8+16+24+...
 
-            switch (direction) {
-                case NORTH:
-                    z++;
-                    break;
-                case EAST:
-                    x++;
-                    break;
-                case SOUTH:
-                    z--;
-                    break;
-                case WEST:
-                    x--;
-                    break;
-            }
+        int en = r * 2;
+        // points by face
 
-            current++;
+        int a = (1 + n - p) % (r * 8);
+        // compute de position and shift it so the first is (-r,-r) but (-r+1,-r)
+        // so square can connect
 
-            if (current == length) {
-                current = 0;
-                direction = direction.next();
-                if (direction == Direction.SOUTH || direction == Direction.NORTH) {
-                    length++;
-                }
-            }
+        Location location;
+
+        switch (a / (r * 2)) {
+            case 0:
+                location = new Location(world, (a - r), 0, -r);
+                break;
+            case 1:
+                location = new Location(world, r, 0, (a % en) - r);
+                break;
+            case 2:
+                location = new Location(world, r - (a % en), 0, r);
+                break;
+            case 3:
+                location = new Location(world, -r, 0, r - (a % en));
+                break;
+            default:
+                throw new IllegalStateException("Could not find island location with ID: " + id);
         }
-        return new Location(world, x * IridiumSkyblock.getInstance().getConfiguration().distance, 0, z * IridiumSkyblock.getInstance().getConfiguration().distance);
+
+        return location.multiply(IridiumSkyblock.getInstance().getConfiguration().distance);
     }
 
     public Island(@NotNull String name, Schematics.FakeSchematic fakeSchematic) {
