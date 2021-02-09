@@ -38,7 +38,7 @@ public final class User {
     @NotNull
     private String name;
 
-    @DatabaseField(columnName = "island_id", foreign = true)
+    @DatabaseField(columnName = "island_id", foreign = true, foreignAutoRefresh = true)
     @Nullable
     private Island island;
 

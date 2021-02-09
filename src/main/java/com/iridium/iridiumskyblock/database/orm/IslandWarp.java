@@ -19,7 +19,7 @@ public class IslandWarp {
     @NotNull
     private Integer id;
 
-    @DatabaseField(columnName = "island_id", foreign = true)
+    @DatabaseField(columnName = "island_id", foreign = true, foreignAutoRefresh = true)
     @NotNull
     private Island island;
 

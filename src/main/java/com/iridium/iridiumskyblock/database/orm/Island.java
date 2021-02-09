@@ -50,11 +50,11 @@ public final class Island {
     @NotNull
     private String home;
 
-    @ForeignCollectionField(columnName = "id", foreignFieldName = "island")
+    @ForeignCollectionField(columnName = "id", foreignFieldName = "island", eager = true)
     @Setter(AccessLevel.PRIVATE)
     private ForeignCollection<User> members;
 
-    @ForeignCollectionField(columnName = "id", foreignFieldName = "island")
+    @ForeignCollectionField(columnName = "id", foreignFieldName = "island", eager = true)
     @Setter(AccessLevel.PRIVATE)
     private ForeignCollection<IslandWarp> islandWarps;
 
@@ -158,7 +158,7 @@ public final class Island {
 
     public Island(@NotNull String name, Schematics.FakeSchematic fakeSchematic) {
         this.name = name;
-        this.home = fakeSchematic.x+","+fakeSchematic.y+","+fakeSchematic.z+",0,0";
+        this.home = fakeSchematic.x + "," + fakeSchematic.y + "," + fakeSchematic.z + ",0,0";
         this.biome = fakeSchematic.overworldData.biome;
         this.netherBiome = fakeSchematic.netherData.biome;
         this.schematic = fakeSchematic.overworldData.schematic;
