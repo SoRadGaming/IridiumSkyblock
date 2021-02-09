@@ -42,13 +42,13 @@ public class BorderColorGUI extends GUI implements Listener {
                     e.getWhoClicked().openInventory(getIsland().islandMenuGUI.getInventory());
                 }
                 if (IridiumSkyblock.getInstance().getBorder().BlueEnabled && e.getSlot() == IridiumSkyblock.getInstance().getInventories().blue.slot)
-                    IslandManager.getIslandViaId(islandID).setBorderColor(Color.Blue);
+                    IslandManager.getIslandViaId(islandID).setBorderColor(Color.BLUE);
                 if (IridiumSkyblock.getInstance().getBorder().RedEnabled && e.getSlot() == IridiumSkyblock.getInstance().getInventories().red.slot)
-                    IslandManager.getIslandViaId(islandID).setBorderColor(Color.Red);
+                    IslandManager.getIslandViaId(islandID).setBorderColor(Color.RED);
                 if (IridiumSkyblock.getInstance().getBorder().GreenEnabled && e.getSlot() == IridiumSkyblock.getInstance().getInventories().green.slot)
-                    IslandManager.getIslandViaId(islandID).setBorderColor(Color.Green);
+                    IslandManager.getIslandViaId(islandID).setBorderColor(Color.GREEN);
                 if (IridiumSkyblock.getInstance().getBorder().OffEnabled && e.getSlot() == IridiumSkyblock.getInstance().getInventories().off.slot)
-                    IslandManager.getIslandViaId(islandID).setBorderColor(Color.Off);
+                    IslandManager.getIslandViaId(islandID).setBorderColor(Color.OFF);
             }
         }
     }

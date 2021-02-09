@@ -46,7 +46,7 @@ public class v1_13_R1 implements NMS {
         worldBorder.world = ((CraftWorld) centerLocation.getWorld()).getHandle();
         worldBorder.setCenter(centerLocation.getBlockX() + 0.5, centerLocation.getBlockZ() + 0.5);
 
-        if (color == Color.Off) {
+        if (color == Color.OFF) {
             worldBorder.setSize(Integer.MAX_VALUE);
         } else {
             worldBorder.setSize(size);
@@ -55,9 +55,9 @@ public class v1_13_R1 implements NMS {
         worldBorder.setWarningDistance(0);
         worldBorder.setWarningTime(0);
 
-        if (color == Color.Red) {
+        if (color == Color.RED) {
             worldBorder.transitionSizeBetween(size, size - 1.0D, 20000000L);
-        } else if (color == Color.Green) {
+        } else if (color == Color.GREEN) {
             worldBorder.transitionSizeBetween(size - 0.1D, size, 20000000L);
         }
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldBorder(worldBorder, PacketPlayOutWorldBorder.EnumWorldBorderAction.INITIALIZE));

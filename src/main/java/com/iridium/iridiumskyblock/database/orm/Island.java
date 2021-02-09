@@ -1,6 +1,7 @@
 package com.iridium.iridiumskyblock.database.orm;
 
 import com.cryptomorin.xseries.XBiome;
+import com.iridium.iridiumskyblock.Color;
 import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.Role;
 import com.iridium.iridiumskyblock.configs.Schematics;
@@ -72,6 +73,13 @@ public final class Island {
     @NotNull
     private Long lastRegenTime;
 
+    @DatabaseField(columnName = "visit")
+    private boolean visit;
+
+    @DatabaseField(columnName = "borderColor")
+    @NotNull
+    private Color borderColor;
+
     public void setLastRegenTime(LocalDateTime localDateTime) {
         this.lastRegenTime = ZonedDateTime.of(localDateTime, ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
@@ -83,7 +91,6 @@ public final class Island {
     public User getOwner() {
         return members.stream().filter(user -> user.getRole() == Role.Owner).findFirst().orElse(null);
     }
-
 
     //Function based off: https://stackoverflow.com/a/19287714
     public Location getCenter(World world) {
@@ -133,5 +140,7 @@ public final class Island {
         this.schematic = fakeSchematic.overworldData.schematic;
         this.netherSchematic = fakeSchematic.netherData.schematic;
         this.lastRegenTime = 0L;
+        this.visit = true;
+        this.borderColor = Color.BLUE;
     }
 }
