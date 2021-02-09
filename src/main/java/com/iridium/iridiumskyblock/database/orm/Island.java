@@ -5,6 +5,7 @@ import com.iridium.iridiumskyblock.Color;
 import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.Role;
 import com.iridium.iridiumskyblock.configs.Schematics;
+import com.iridium.iridiumskyblock.managers.IslandManager;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -45,6 +46,10 @@ public final class Island {
     @NotNull
     private String name;
 
+    @DatabaseField(columnName = "home")
+    @NotNull
+    private String home;
+
     @ForeignCollectionField(columnName = "id", foreignFieldName = "island")
     @Setter(AccessLevel.PRIVATE)
     private ForeignCollection<User> members;
@@ -80,16 +85,34 @@ public final class Island {
     @NotNull
     private Color borderColor;
 
-    public void setLastRegenTime(LocalDateTime localDateTime) {
+    @DatabaseField(columnName = "value")
+    private double value;
+
+    @DatabaseField(columnName = "extra_value")
+    private double extraValue;
+
+    public void setLastRegenTime(@NotNull LocalDateTime localDateTime) {
         this.lastRegenTime = ZonedDateTime.of(localDateTime, ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
+    @NotNull
     public LocalDateTime getLastRegenTime() {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(lastRegenTime), ZoneId.systemDefault());
     }
 
     public User getOwner() {
         return members.stream().filter(user -> user.getRole() == Role.Owner).findFirst().orElse(null);
+    }
+
+    @NotNull
+    public Location getHome() {
+        String[] params = home.split(",");
+        return new Location(IslandManager.getWorld(), Double.parseDouble(params[0]), Double.parseDouble(params[1]), Double.parseDouble(params[2]), Float.parseFloat(params[3]), Float.parseFloat(params[4])).add(getCenter(IslandManager.getWorld()));
+    }
+
+    public void setHome(@NotNull Location location) {
+        location.subtract(getHome());
+        this.home = location.getX() + "," + location.getY() + "," + location.getZ() + "," + location.getPitch() + "," + location.getYaw();
     }
 
     //Function based off: https://stackoverflow.com/a/19287714
@@ -135,6 +158,7 @@ public final class Island {
 
     public Island(@NotNull String name, Schematics.FakeSchematic fakeSchematic) {
         this.name = name;
+        this.home = fakeSchematic.x+","+fakeSchematic.y+","+fakeSchematic.z+",0,0";
         this.biome = fakeSchematic.overworldData.biome;
         this.netherBiome = fakeSchematic.netherData.biome;
         this.schematic = fakeSchematic.overworldData.schematic;
