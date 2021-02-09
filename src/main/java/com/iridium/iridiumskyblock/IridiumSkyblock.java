@@ -9,6 +9,7 @@ import com.iridium.iridiumskyblock.api.IridiumSkyblockReloadEvent;
 import com.iridium.iridiumskyblock.bank.BankItem;
 import com.iridium.iridiumskyblock.commands.CommandManager;
 import com.iridium.iridiumskyblock.configs.*;
+import com.iridium.iridiumskyblock.database.DatabaseWrapper;
 import com.iridium.iridiumskyblock.gui.*;
 import com.iridium.iridiumskyblock.listeners.*;
 import com.iridium.iridiumskyblock.managers.IslandDataManager;
@@ -24,6 +25,7 @@ import com.iridium.iridiumskyblock.schematics.WorldEdit6;
 import com.iridium.iridiumskyblock.schematics.WorldEdit7;
 import com.iridium.iridiumskyblock.support.*;
 import com.iridium.iridiumskyblock.utils.StringUtils;
+import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -92,8 +94,8 @@ public class IridiumSkyblock extends JavaPlugin {
         return instance;
     }
 
-//    @Getter
-//    private DatabaseWrapper database;
+    @Getter
+    private DatabaseWrapper database;
 
     @Override
     public void onEnable() {
@@ -138,11 +140,16 @@ public class IridiumSkyblock extends JavaPlugin {
         Bukkit.getScheduler().runTask(this, () -> { // Call this a tick later to ensure all worlds are loaded
             IslandManager.makeWorlds();
             IslandManager.nextLocation = new Location(IslandManager.getWorld(), 0, 0, 0);
-//            try {
-//                database = new DatabaseWrapper();
-//            } catch (SQLException exception) {
-//                exception.printStackTrace();
-//            }
+            try {
+                database = new DatabaseWrapper();
+                com.iridium.iridiumskyblock.database.orm.User user = new com.iridium.iridiumskyblock.database.orm.User(UUID.randomUUID(),"Peaches_MLG");
+                database.saveUser(user);
+                database.getUserByName("Peaches_MLG").thenAccept(user1 -> {
+                    getLogger().info(user1.isBypassing()+"");
+                });
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+            }
             loadManagers();
 
             if (Bukkit.getPluginManager().getPlugin("Multiverse-Core") != null) registerMultiverse();

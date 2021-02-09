@@ -3,6 +3,7 @@ package com.iridium.iridiumskyblock.database;
 import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.configs.SQL;
 import com.iridium.iridiumskyblock.database.orm.Island;
+import com.iridium.iridiumskyblock.database.orm.IslandWarp;
 import com.iridium.iridiumskyblock.database.orm.User;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -31,6 +32,7 @@ public final class DatabaseWrapper {
 
     private final Dao<User, UUID> userDao;
     private final Dao<Island, Integer> islandDao;
+    private final Dao<IslandWarp, Integer> islandWarpsDao;
 
     public DatabaseWrapper() throws SQLException {
         String databaseURL = getDatabaseURL();
@@ -44,9 +46,11 @@ public final class DatabaseWrapper {
 
         TableUtils.createTableIfNotExists(connectionSource, User.class);
         TableUtils.createTableIfNotExists(connectionSource, Island.class);
+        TableUtils.createTableIfNotExists(connectionSource, IslandWarp.class);
 
         this.userDao = DaoManager.createDao(connectionSource, User.class);
         this.islandDao = DaoManager.createDao(connectionSource, Island.class);
+        this.islandWarpsDao = DaoManager.createDao(connectionSource, IslandWarp.class);
     }
 
     private @NotNull String getDatabaseURL() {
@@ -113,6 +117,14 @@ public final class DatabaseWrapper {
     public void saveIsland(@NotNull Island island) {
         try {
             islandDao.createOrUpdate(island);
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    public void saveIslandWarp(@NotNull IslandWarp islandWarp) {
+        try {
+            islandWarpsDao.createOrUpdate(islandWarp);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

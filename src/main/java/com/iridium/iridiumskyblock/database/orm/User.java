@@ -3,6 +3,7 @@ package com.iridium.iridiumskyblock.database.orm;
 import com.iridium.iridiumskyblock.Role;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -46,6 +49,22 @@ public final class User {
     @DatabaseField(columnName = "last_creation_time", canBeNull = false)
     @NotNull
     private Long lastCreationTime;
+
+    private boolean bypassing = false;
+
+    private boolean islandChat = false;
+
+    private boolean spying = false;
+
+    private boolean tookInterestMessage = false;
+
+    private IslandWarp islandWarp;
+
+    @Setter(AccessLevel.PRIVATE)
+    private List<Integer> islandInvites = new ArrayList<>();
+
+    @Setter(AccessLevel.PRIVATE)
+    private List<Object> holograms = new ArrayList<>();
 
     public void setLastCreationTime(LocalDateTime localDateTime) {
         this.lastCreationTime = ZonedDateTime.of(localDateTime, ZoneId.systemDefault()).toInstant().toEpochMilli();

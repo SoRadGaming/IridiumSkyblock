@@ -48,6 +48,10 @@ public final class Island {
     @Setter(AccessLevel.PRIVATE)
     private ForeignCollection<User> members;
 
+    @ForeignCollectionField(columnName = "id", foreignFieldName = "island")
+    @Setter(AccessLevel.PRIVATE)
+    private ForeignCollection<IslandWarp> islandWarps;
+
     @DatabaseField(columnName = "biome", canBeNull = false)
     @NotNull
     private XBiome biome;
