@@ -41,17 +41,15 @@ public class PlayerTeleportListener implements Listener {
         }
         user.name = player.getName();
         Island island = user.getIsland();
-        if (IslandManager.isIslandWorld(toLocation) && IridiumSkyblock.getInstance().getConfiguration().notifyOnWorldJoin && island != null) {
-            if (!user.tookInterestMessage) {
-                if (island.interestMoney != 0 && island.interestExp != 0 && island.interestCrystal != 0) {
-                    player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().islandInterest
-                            .replace("%exp%", NumberFormatter.format(island.interestExp))
-                            .replace("%crystals%", NumberFormatter.format(island.interestCrystal))
-                            .replace("%money%", NumberFormatter.format(island.interestMoney))
-                            .replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
-                }
-                user.tookInterestMessage = true;
+        if (IslandManager.isIslandWorld(toLocation) && IridiumSkyblock.getInstance().getConfiguration().notifyOnWorldJoin && island != null && !user.tookInterestMessage) {
+            if (island.interestMoney != 0 && island.interestExp != 0 && island.interestCrystal != 0) {
+                player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().islandInterest
+                        .replace("%exp%", NumberFormatter.format(island.interestExp))
+                        .replace("%crystals%", NumberFormatter.format(island.interestCrystal))
+                        .replace("%money%", NumberFormatter.format(island.interestMoney))
+                        .replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
             }
+            user.tookInterestMessage = true;
         }
 
         if (user.islandID == toIsland.id) return;
