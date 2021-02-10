@@ -33,16 +33,18 @@ public class PlayerJoinLeaveListener implements Listener {
         final User user = User.getUser(player);
         user.name = player.getName();
         Island island = user.getIsland();
-        if (island != null) {
-            if (!user.tookInterestMessage) {
-                if (island.interestMoney != 0 && island.interestExp != 0 && island.interestCrystal != 0) {
-                    player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().islandInterest
-                            .replace("%exp%", NumberFormatter.format(island.interestExp))
-                            .replace("%crystals%", NumberFormatter.format(island.interestCrystal))
-                            .replace("%money%", NumberFormatter.format(island.interestMoney))
-                            .replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
+        if (IridiumSkyblock.getInstance().getConfiguration().notifyOnServerJoin) {
+            if (island != null) {
+                if (!user.tookInterestMessage) {
+                    if (island.interestMoney != 0 && island.interestExp != 0 && island.interestCrystal != 0) {
+                        player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().islandInterest
+                                .replace("%exp%", NumberFormatter.format(island.interestExp))
+                                .replace("%crystals%", NumberFormatter.format(island.interestCrystal))
+                                .replace("%money%", NumberFormatter.format(island.interestMoney))
+                                .replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
+                    }
+                    user.tookInterestMessage = true;
                 }
-                user.tookInterestMessage = true;
             }
         }
 

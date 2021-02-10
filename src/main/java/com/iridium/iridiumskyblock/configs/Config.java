@@ -35,6 +35,8 @@ public class Config {
     public boolean islandMenu = true;
     public boolean voidTeleport = true;
     public boolean notifyAvailableUpdate = true;
+    public boolean notifyOnServerJoin = true;
+    public boolean notifyOnWorldJoin = false;
     public boolean clearInventories = false;
     public boolean clearEnderChests = false;
     public boolean restartUpgradesOnRegen = true;
